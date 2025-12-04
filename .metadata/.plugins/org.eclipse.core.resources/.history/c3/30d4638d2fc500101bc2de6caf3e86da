@@ -1,0 +1,104 @@
+package view;
+
+import java.awt.BasicStroke;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.GridLayout;
+import java.awt.Image;
+import java.lang.ModuleLayer.Controller;
+
+import javax.swing.Icon;
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JPanel;
+
+import model.Piece;
+
+public class BoardPanel extends JPanel {
+	private JButton[][] cells = new JButton[5][5];
+
+	public BoardPanel() {
+		setPreferredSize(new Dimension(500, 500));
+		setLayout(new GridLayout(5, 5));
+
+		for (int r = 0; r < 5; r++) {
+			for (int c = 0; c < 5; c++) {
+				JButton btn = new JButton("");
+
+				btn.setPreferredSize(new Dimension(50, 50));
+				btn.setContentAreaFilled(false);
+				btn.setOpaque(false);
+				btn.setBackground(Color.LIGHT_GRAY);
+				btn.setBorderPainted(false);
+
+				cells[r][c] = btn;
+				add(btn);
+			}
+		}
+	}
+	public void updateCell(int r, int c, String color) {
+//		cells[r][c].setIcon(setQuanCo(color));
+		cells[r][c].setText(setNoidung(color));
+		cells[r][c].repaint();
+		
+	}
+	private String setNoidung(String color) {
+		switch (color) {
+		case "black":
+			return "x";
+		case "white":
+			return "O";
+		default:
+			return null;
+		}
+	}
+	private Icon setQuanCo(String symbol) {
+		ImageIcon iconD = new ImageIcon("/img/coDo-Photoroom.png");
+		ImageIcon iconX = new ImageIcon("/img/coxanh-Photoroom.png");
+		Image imgD = iconD.getImage().getScaledInstance(50, 50, Image.SCALE_SMOOTH);
+		Image imgX = iconX.getImage().getScaledInstance(50, 50, Image.SCALE_SMOOTH);
+		switch (symbol) {
+		case "black":
+			return new ImageIcon(imgD);
+		case "white":
+			return new ImageIcon(imgX);
+		default:
+			return null;
+		}
+	}
+//	@Override
+//	protected void paintComponent(Graphics g) {
+//		// TODO Auto-generated method stub
+//		super.paintComponent(g);
+//		Graphics2D g2 = (Graphics2D) g;
+//		drawBoard(g2);
+//	}
+//
+//	private void drawBoard(Graphics2D g) {
+//		float lineThickness = 3.0f;
+//		g.setStroke(new BasicStroke(lineThickness));
+//		g.drawLine(50, 50, 50, 450);
+//		g.drawLine(150, 50, 150, 450);
+//		g.drawLine(250, 50, 250, 450);
+//		g.drawLine(350, 50, 350, 450);
+//		g.drawLine(450, 50, 450, 450);
+//
+//		g.drawLine(50, 50, 450, 50);
+//		g.drawLine(50, 150, 450, 150);
+//		g.drawLine(50, 250, 450, 250);
+//		g.drawLine(50, 350, 450, 350);
+//		g.drawLine(50, 450, 450, 450);
+//
+//		g.drawLine(50, 50, 450, 450);
+//		g.drawLine(450, 50, 50, 450);
+//		g.drawLine(250, 50, 50, 250);
+//		g.drawLine(450, 250, 250, 450);
+//		g.drawLine(250, 50, 50, 250);
+//		g.drawLine(450, 250, 250, 450);
+//		g.drawLine(250, 50, 450, 250);
+//		g.drawLine(50, 250, 250, 450);
+//
+//	}
+}

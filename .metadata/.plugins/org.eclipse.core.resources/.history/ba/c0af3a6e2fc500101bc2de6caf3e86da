@@ -1,0 +1,42 @@
+package view;
+
+import java.awt.GridLayout;
+import java.lang.ModuleLayer.Controller;
+
+import javax.swing.BoxLayout;
+import javax.swing.JFrame;
+
+import controller.ControllerMain;
+import model.Piece;
+
+public class GameFrame extends JFrame {
+	private BoardPanel board;
+	private InForPlayerPanel inforp;
+	private MenuPanel menu;
+	private ControllerMain c;
+	public GameFrame(ControllerMain c) {
+		super("Cờ Gánh");
+		this.c = c;
+		setLayout(new BoxLayout(getContentPane(), BoxLayout.Y_AXIS));
+		inforp=new InForPlayerPanel();
+		add(inforp);
+		board=new BoardPanel();
+		add(board);
+		menu = new MenuPanel();
+		add(menu);
+		//
+		setDefaultCloseOperation(EXIT_ON_CLOSE);
+		pack();
+		setLocationRelativeTo(null);
+		setVisible(true);
+
+	}
+	
+	public void updateBoard(int i,int j,String color) {
+		board.updateCell(i, j, color);
+	}
+	public static void main(String[] args) {
+		GameFrame game=new GameFrame(new ControllerMain());
+
+	}
+}

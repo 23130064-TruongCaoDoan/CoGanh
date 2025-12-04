@@ -1,0 +1,52 @@
+package model;
+
+public class Move {
+	private Board b;
+	private Ganh ganh;
+	private Chet chet;
+
+	public Move(Board b) {
+		super();
+		this.b = b;
+		this.ganh = new Ganh();
+		this.chet = new Chet();
+	}
+
+	public boolean diChuyen(int fX, int fY, int toX, int toY, String currentColor) {
+		if (b.isMoveValid(fX, fY, toX, toY, currentColor)) {
+			b.move(fX, fY, toX, toY);
+			return true;
+		}
+		return false;
+	}
+
+	public int anQuan(int fX, int fY, int toX, int toY, String currentColor) {
+		return ganh.anGanh(fX, fY, toX, toY, currentColor, b)+chet.anChet(fX, fY, toX, toY, currentColor, b);
+	}
+
+	public boolean nuocDi(String currentColor) {
+		Piece[][] board = this.b.getBoard();
+
+		for (int r = 0; r < 5; r++) {
+			for (int c = 0; c < 5; c++) {
+				if (board[r][c].getColor().equals(currentColor)) {
+
+					int[][] dirs = { { -1, 0 }, { 1, 0 }, { 0, -1 }, { 0, 1 } };
+					if (b.isDiagonalAllowed(r, c)) {
+						dirs = new int[][] { { -1, 0 }, { 1, 0 }, { 0, -1 }, { 0, 1 }, { -1, -1 }, { -1, 1 }, { 1, -1 },
+								{ 1, 1 } };
+					}
+
+					for (int[] d : dirs) {
+						int nr = r + d[0];
+						int nc = c + d[1];
+						if (b.inBoard(nr, nc) && board[nr][nc].getColor().equals("emty")) {
+							return true;
+						}
+					}
+				}
+			}
+		}
+		return false;
+	}
+}

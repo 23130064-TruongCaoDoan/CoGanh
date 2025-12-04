@@ -1,0 +1,11 @@
+package model;
+
+public class AI {
+	private GameLogic logic;
+
+	public AI(GameLogic logic) {
+		super();
+		this.logic = logic;
+	}
+	
+}
