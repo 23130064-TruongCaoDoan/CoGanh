@@ -5,6 +5,7 @@ import java.util.List;
 
 public class AI {
 	private GameLogic logic;
+//	private int depth;
 
 	public AI(GameLogic logic) {
 		super();
@@ -12,30 +13,18 @@ public class AI {
 	}
 
 	public static int heuristic(Board board) {
-		return 10 * (board.countPiece(true) - board.countPiece(false))
-				+ 5 * (board.countPieceCenter(true) - board.countPieceCenter(false));
+		return 10 * (board.countPiece(false) - board.countPiece(true))
+				+ 5 * (board.countPieceCenter(false) - board.countPieceCenter(true));
 	}
 
-//	public static void main(String[] args) {
-//		Board testBoard = new Board(new Piece[][] {
-//		    { new Piece("emty", 0, 0), new Piece("black", 0, 1), new Piece("emty", 0, 2), new Piece("white", 0, 3), new Piece("emty", 0, 4) },
-//		    { new Piece("black", 1, 0), new Piece("emty", 1, 1), new Piece("white", 1, 2), new Piece("emty", 1, 3), new Piece("black", 1, 4) },
-//		    { new Piece("emty", 2, 0), new Piece("white", 2, 1), new Piece("black", 2, 2), new Piece("white", 2, 3), new Piece("emty", 2, 4) },
-//		    { new Piece("white", 3, 0), new Piece("emty", 3, 1), new Piece("black", 3, 2), new Piece("emty", 3, 3), new Piece("white", 3, 4) },
-//		    { new Piece("emty", 4, 0), new Piece("emty", 4, 1), new Piece("white", 4, 2), new Piece("emty", 4, 3), new Piece("emty", 4, 4) }
-//		});
-//		heuristic(testBoard);
-//		System.out.println(heuristic(testBoard));
-//	}
 	public int minimax(boolean maxmin, Board board, int depth) {
-		String currentColor = logic.getTurn() ? "white" : "black"; 
 		if (depth == 0)
 			return heuristic(board);
 
 		if (maxmin) {
 			int temp = -999999999;
 
-			for (Board child : getChildren(board,"black")) {
+			for (Board child : getChildren(board, "black")) {
 				int value = minimax(false, child, depth - 1);
 				if (value > temp) {
 					temp = value;
@@ -45,8 +34,8 @@ public class AI {
 		} else {
 			int temp = 999999999;
 
-			for (Board child : getChildren(board,"white")) {
-				int value = minimax(false, child, depth - 1);
+			for (Board child : getChildren(board, "white")) {
+				int value = minimax(true, child, depth - 1);
 				if (value < temp) {
 					temp = value;
 				}
@@ -87,12 +76,38 @@ public class AI {
 		Piece[][] nb = new Piece[5][5];
 		for (int i = 0; i < 5; i++) {
 			for (int j = 0; j < 5; j++) {
-				nb[i][j]  = oldB[i][j];
-		}
+				Piece p = oldB[i][j];
+				nb[i][j] = new Piece(p.getColor(), i, j);
+			}
 		}
 
 		return new Board(nb);
 	}
 
-}
+	public Board getBestMove(Board board, int depth) {
+		List<Board> children = getChildren(board, "black");
+		int bestScore = Integer.MIN_VALUE;
+		Board bestBoard = null;
+		for (Board child : children) {
+			int score = minimax(false, child, depth - 1);
+			if (score > bestScore) {
+				bestScore = score;
+				bestBoard = child;
+			}
+		}
+		return bestBoard;
+	}
 
+	public void aiTurn() throws InterruptedException {
+		if (!logic.getTurn()) {
+			Thread.sleep(800);
+			Board currentBoard = logic.getBoard();
+			Board bestBoard = getBestMove(currentBoard,4 );
+			int eatenWhite = currentBoard.countPiece(true) - bestBoard.countPiece(true);
+			logic.setBoard(bestBoard);
+			logic.getP2().setPoint(logic.getP2().getPoint() + eatenWhite);
+			logic.setTurn(true);
+		}
+	}
+
+}

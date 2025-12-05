@@ -20,11 +20,11 @@ public class InForPlayerPanel extends JPanel{
 		p1.setBackground(Color.gray);
 		add(p1);
 		p1.setLayout(new GridLayout(2,1));
-		p1.add(name1 =new JLabel(" người chơi 1"));
+		p1.add(name1 =new JLabel(" Player 1"));
 		p11=new JPanel();
 		p1.add(p11);
 		p11.setLayout(new FlowLayout());
-		p11.add(point1 =new JLabel("Điểm người chơi 1:"));
+		p11.add(point1 =new JLabel("Điểm Player 1:"));
 		p11.add(diem1 =new JLabel());
 		
 		
@@ -32,11 +32,11 @@ public class InForPlayerPanel extends JPanel{
 		p2.setBackground(Color.gray);
 		add(p2);
 		p2.setLayout(new GridLayout(2,1));
-		p2.add(name2 =new JLabel(" người chơi 2"));
+		p2.add(name2 =new JLabel(" Player 2"));
 		p21=new JPanel();
 		p2.add(p21);
 		p21.setLayout(new FlowLayout());
-		p21.add(point2 =new JLabel("Điểm người chơi 2:"));
+		p21.add(point2 =new JLabel("Điểm Player 2:"));
 		p21.add(diem2 =new JLabel());
 		
 	}

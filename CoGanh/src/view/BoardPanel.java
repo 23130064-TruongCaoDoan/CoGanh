@@ -37,7 +37,14 @@ public class BoardPanel extends JPanel {
 				btn.setBorderPainted(false);
 				int rr=r;
 				int cc=c;
-				btn.addActionListener(e ->controller.click(rr,cc));
+				btn.addActionListener(e ->{
+					try {
+						controller.click(rr,cc);
+					} catch (InterruptedException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
+				});
 				cells[r][c] = btn;
 				add(btn);
 			}

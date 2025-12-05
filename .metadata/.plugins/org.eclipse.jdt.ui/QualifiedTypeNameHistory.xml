@@ -7,7 +7,6 @@
     <fullyQualifiedTypeName name="javax.swing.BoxLayout"/>
     <fullyQualifiedTypeName name="java.awt.GridLayout"/>
     <fullyQualifiedTypeName name="javax.swing.JButton"/>
-    <fullyQualifiedTypeName name="model.GameLogic"/>
     <fullyQualifiedTypeName name="model.Player"/>
     <fullyQualifiedTypeName name="javax.swing.ImageIcon"/>
     <fullyQualifiedTypeName name="java.lang.ProcessHandle.Info"/>
@@ -16,7 +15,6 @@
     <fullyQualifiedTypeName name="view.MenuPanel"/>
     <fullyQualifiedTypeName name="javax.swing.border.Border"/>
     <fullyQualifiedTypeName name="java.awt.Color"/>
-    <fullyQualifiedTypeName name="model.Board"/>
     <fullyQualifiedTypeName name="model.Move"/>
     <fullyQualifiedTypeName name="model.Piece"/>
     <fullyQualifiedTypeName name="model.Chet"/>
@@ -26,4 +24,10 @@
     <fullyQualifiedTypeName name="java.awt.FlowLayout"/>
     <fullyQualifiedTypeName name="java.lang.Integer"/>
     <fullyQualifiedTypeName name="java.lang.String"/>
+    <fullyQualifiedTypeName name="model.GameLogic"/>
+    <fullyQualifiedTypeName name="model.AI"/>
+    <fullyQualifiedTypeName name="java.util.List"/>
+    <fullyQualifiedTypeName name="java.util.ArrayList"/>
+    <fullyQualifiedTypeName name="model.Board"/>
+    <fullyQualifiedTypeName name="java.lang.Thread"/>
 </qualifiedTypeNameHistroy>

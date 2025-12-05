@@ -64,7 +64,7 @@ public class ControllerMain {
 		ControllerMain c = new ControllerMain();
 	}
 
-	public void click(int rr, int cc) {
+	public void click(int rr, int cc) throws InterruptedException {
 		if (this.x == -1) {
 			if (model.isValidToSelect(rr, cc)) {
 				this.x = rr;
@@ -86,15 +86,27 @@ public class ControllerMain {
 			handleWin();
 			this.x = -1;
 			this.y = -1;
+			javax.swing.SwingUtilities.invokeLater(() -> {
+	            try {
+	                Thread.sleep(300);
+	                aiRun();
+	            } catch (InterruptedException ex) {
+	                ex.printStackTrace();
+	            }
+	        });
 		}
 	}
 
+	private void aiRun() throws InterruptedException {
+		ai.aiTurn();
+		diemPlayer();
+		turn();
+		updateBoard();
+		handleWin();
+	}
+
 	public void turn() {
-		if (model.getTurn()) {
-			playerP.highlight(true);
-		} else {
-			playerP.highlight(false);
-		}
+		playerP.highlight(model.getTurn());
 
 	}
 

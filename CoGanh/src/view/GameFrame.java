@@ -21,11 +21,8 @@ public class GameFrame extends JFrame {
 	public GameFrame(BoardPanel board,InForPlayerPanel inforp, MenuPanel menu) {
 		super("Cờ Gánh");
 		setLayout(new BoxLayout(getContentPane(), BoxLayout.Y_AXIS));
-//		inforp=new InForPlayerPanel();
 		add(inforp);
-//		board=new BoardPanel(c);
 		add(board);
-//		menu = new MenuPanel();
 		add(menu);
 		
 		//
