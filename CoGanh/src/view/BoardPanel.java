@@ -38,12 +38,7 @@ public class BoardPanel extends JPanel {
 				int rr=r;
 				int cc=c;
 				btn.addActionListener(e ->{
-					try {
-						controller.click(rr,cc);
-					} catch (InterruptedException e1) {
-						// TODO Auto-generated catch block
-						e1.printStackTrace();
-					}
+					controller.click(rr,cc);
 				});
 				cells[r][c] = btn;
 				add(btn);

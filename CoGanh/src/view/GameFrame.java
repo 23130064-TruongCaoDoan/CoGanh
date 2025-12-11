@@ -1,67 +1,54 @@
 package view;
 
-import java.awt.Button;
-import java.awt.GridLayout;
-import java.lang.ModuleLayer.Controller;
-
-import javax.swing.BoxLayout;
-import javax.swing.ImageIcon;
-import javax.swing.JButton;
-import javax.swing.JFrame;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-
-import controller.ControllerMain;
-import model.Piece;
+import javax.swing.*;
+import java.awt.*;
 
 public class GameFrame extends JFrame {
-	private BoardPanel board;
-	private InForPlayerPanel inforp;
-	private MenuPanel menu;
-	public GameFrame(BoardPanel board,InForPlayerPanel inforp, MenuPanel menu) {
-		super("Cờ Gánh");
-		setLayout(new BoxLayout(getContentPane(), BoxLayout.Y_AXIS));
-		add(inforp);
-		add(board);
-		add(menu);
-		
-		//
-		setDefaultCloseOperation(EXIT_ON_CLOSE);
-		pack();
-		setLocationRelativeTo(null);
-		setVisible(true);
 
-	}
-	
-	public BoardPanel getBoard() {
-		return board;
-	}
+    private CardLayout card;
+    private JPanel mainPanel;
 
-	public void setBoard(BoardPanel board) {
-		this.board = board;
-	}
+    // Panels
+    private HomePanel home;
+    private JPanel gamePanel;
 
-	public InForPlayerPanel getInforp() {
-		return inforp;
-	}
+    public GameFrame(HomePanel homePanel, BoardPanel board, InForPlayerPanel info, MenuPanel menu) {
+        super("Cờ Gánh 5x5");
 
-	public void setInforp(InForPlayerPanel inforp) {
-		this.inforp = inforp;
-	}
+        this.home = homePanel;
 
-	public MenuPanel getMenu() {
-		return menu;
-	}
+        card = new CardLayout();
+        mainPanel = new JPanel(card);
 
-	public void setMenu(MenuPanel menu) {
-		this.menu = menu;
-	}
+        // ============ GAME PANEL ==============
+        gamePanel = new JPanel();
+        gamePanel.setLayout(new BoxLayout(gamePanel, BoxLayout.Y_AXIS));
 
-	public void thongBaoWin(String p) {
-		String msg = p + " thắng!";
-	    JOptionPane.showMessageDialog(this, msg, "Kết quả", JOptionPane.INFORMATION_MESSAGE);
-		
-	}
+        gamePanel.add(info);
+        gamePanel.add(board);
+        gamePanel.add(menu);
 
-	
+        // Add vào card layout
+        mainPanel.add(home, "HOME");
+        mainPanel.add(gamePanel, "GAME");
+
+        add(mainPanel);
+
+        setDefaultCloseOperation(EXIT_ON_CLOSE);
+        pack();
+        setLocationRelativeTo(null);
+        setVisible(true);
+    }
+
+    public void showHome() {
+        card.show(mainPanel, "HOME");
+    }
+
+    public void showGame() {
+        card.show(mainPanel, "GAME");
+    }
+
+    public void thongBaoWin(String p) {
+        JOptionPane.showMessageDialog(this, p + " thắng!", "Kết thúc", JOptionPane.INFORMATION_MESSAGE);
+    }
 }

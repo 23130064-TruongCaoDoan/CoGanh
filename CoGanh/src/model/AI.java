@@ -5,11 +5,19 @@ import java.util.List;
 
 public class AI {
 	private GameLogic logic;
-//	private int depth;
-
+	private int depth;
+    
+	
 	public AI(GameLogic logic) {
 		super();
 		this.logic = logic;
+	}
+	public int getDepth() {
+		return depth;
+	}
+
+	public void setDepth(int depth) {
+		this.depth = depth;
 	}
 
 	public static int heuristic(Board board) {

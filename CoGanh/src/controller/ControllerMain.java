@@ -1,138 +1,146 @@
 package controller;
 
-import java.awt.Color;
-import java.awt.Component;
-import java.awt.Graphics;
-import java.awt.Insets;
-import java.lang.ProcessHandle.Info;
-
-import javax.swing.BorderFactory;
-import javax.swing.border.Border;
-
 import model.AI;
-import model.Board;
 import model.GameLogic;
 import model.Piece;
-import view.BoardPanel;
-import view.GameFrame;
-import view.InForPlayerPanel;
-import view.MenuPanel;
+import view.*;
 
 public class ControllerMain {
-	private GameLogic model;
-	private AI ai;
-	private GameFrame frame;
-	private BoardPanel boardpanel;
-	private InForPlayerPanel playerP;
-	private MenuPanel menup;
-	private int x, y;
 
-	public ControllerMain() {
-		super();
-		this.x = -1;
-		this.y = -1;
-		this.model = new GameLogic();
-		this.boardpanel = new BoardPanel(this);
-		this.playerP = new InForPlayerPanel();
-		this.menup = new MenuPanel();
-		this.frame = new GameFrame(boardpanel, playerP, menup);
-		this.ai=new AI(model);
-		updateBoard();
-		reset();
-		turn();
-		diemPlayer();
+    private GameLogic model;
+    private AI ai;
+    private GameFrame frame;
 
+    private BoardPanel boardPanel;
+    private InForPlayerPanel infoPanel;
+    private MenuPanel menuPanel;
+    private HomePanel homePanel;
+    private int x, y;
+    private boolean aiMode;
+    public ControllerMain() {
+        this.x = -1;
+        this.y = -1;
+        this.aiMode = false;
+        model = new GameLogic();
+        ai = new AI(model);
+
+        boardPanel = new BoardPanel(this);
+        infoPanel = new InForPlayerPanel();
+        menuPanel = new MenuPanel();
+
+     
+        homePanel = new HomePanel(new HomePanel.HomeListener() {
+            @Override
+            public void onPvP() {
+                frame.showGame();
+            }
+
+            @Override
+            public void onAISelected(String level) {
+            	if (level.equals("Dễ")) ai.setDepth(0);
+            	else if (level.equals("Thường")) ai.setDepth(2);
+            	else if (level.equals("Khó")) ai.setDepth(4);
+            	aiMode = true;
+                frame.showGame();
+            }
+        });
+
+        frame = new GameFrame(homePanel, boardPanel, infoPanel, menuPanel);
+
+        updateBoard();
+        updateTurn();
+        updateScore();
+
+        setupMenuActions();
+    }
+
+    private void setupMenuActions() {
+        menuPanel.getNewGame().addActionListener(e -> resetGame());
+    }
+
+    public void click(int rr, int cc) {
+
+        if (x == -1) {
+            if (model.isValidToSelect(rr, cc)) {
+                x = rr;
+                y = cc;
+            }
+        } else {
+            if (x == rr && y == cc) {
+                x = -1; y = -1;
+                return;
+            }
+
+            model.move(x, y, rr, cc);
+            updateScore();
+            updateBoard();
+            updateTurn();
+            checkWin();
+            if(aiMode) {
+            	javax.swing.SwingUtilities.invokeLater(() -> {
+    	            try {
+    	                Thread.sleep(300);
+    	                aiRun();
+    	            } catch (InterruptedException ex) {
+    	                ex.printStackTrace();
+    	            }
+    	        });
+            }
+            x = -1; y = -1;
+        }
+    }
+
+    public boolean isAiMode() {
+		return aiMode;
 	}
 
-	private void reset() {
-		menup.getNewGame().addActionListener(e -> {
-			resetGame();
-		});
-
-	}
-
-	public void updateBoard() {
-		Piece[][] board = model.getBoard().getBoard();
-		for (int i = 0; i < 5; i++) {
-			for (int j = 0; j < 5; j++) {
-				boardpanel.updateCell(i, j, board[i][j].getColor());
-			}
-		}
-	}
-
-	public static void main(String[] args) {
-		ControllerMain c = new ControllerMain();
-	}
-
-	public void click(int rr, int cc) throws InterruptedException {
-		if (this.x == -1) {
-			if (model.isValidToSelect(rr, cc)) {
-				this.x = rr;
-				this.y = cc;
-			}
-
-		} else {
-			int toX = rr;
-			int toY = cc;
-			if (this.x == toX && this.y == toY) {
-				this.x = -1;
-				this.y = -1;
-				return;
-			}
-			model.move(this.x, this.y, toX, toY);
-			diemPlayer();
-			updateBoard();
-			turn();
-			handleWin();
-			this.x = -1;
-			this.y = -1;
-			javax.swing.SwingUtilities.invokeLater(() -> {
-	            try {
-	                Thread.sleep(300);
-	                aiRun();
-	            } catch (InterruptedException ex) {
-	                ex.printStackTrace();
-	            }
-	        });
-		}
-	}
-
-	private void aiRun() throws InterruptedException {
-		ai.aiTurn();
-		diemPlayer();
-		turn();
-		updateBoard();
-		handleWin();
-	}
-
-	public void turn() {
-		playerP.highlight(model.getTurn());
-
-	}
-
-	public void diemPlayer() {
-		int p1 = model.getP1().getPoint();
-		int p2 = model.getP2().getPoint();
-		playerP.setDiem(p1, p2);
-	}
-
-	private void handleWin() {
-		int result = model.checkWinCount();
-		int result2 = model.checkWinBi();
-		if (result == 1 || result2 == 1) {
-			frame.thongBaoWin("Người chơi 1");
-			resetGame();
-		} else if (result == -1 || result2 == -1) {
-			frame.thongBaoWin("Người chơi 2");
-			resetGame();
-		}
+	public void setAiMode(boolean aiMode) {
+		this.aiMode = aiMode;
 	}
 
 	private void resetGame() {
-		model.reset();
-		playerP.reset();
+        model.reset();
+        infoPanel.reset();
+        updateBoard();
+        updateScore();
+        updateTurn();
+    }
+    private void aiRun() throws InterruptedException {
+		ai.aiTurn();
+		updateScore();
+		updateTurn();
 		updateBoard();
-		diemPlayer();
+		checkWin();
 	}
+    private void updateBoard() {
+        Piece[][] b = model.getBoard().getBoard();
+        for (int i = 0; i < 5; i++)
+            for (int j = 0; j < 5; j++)
+                boardPanel.updateCell(i, j, b[i][j].getColor());
+    }
 
+    private void updateTurn() {
+        infoPanel.highlight(model.getTurn());
+    }
+
+    private void updateScore() {
+        infoPanel.setDiem(model.getP1().getPoint(), model.getP2().getPoint());
+    }
+
+    private void checkWin() {
+        int c1 = model.checkWinCount();
+        int c2 = model.checkWinBi();
+
+        if (c1 == 1 || c2 == 1) {
+            frame.thongBaoWin("Người chơi 1");
+            resetGame();
+        } else if (c1 == -1 || c2 == -1) {
+            frame.thongBaoWin("Người chơi 2");
+            resetGame();
+        }
+    }
+
+    public static void main(String[] args) {
+        new ControllerMain();
+    }
 }
