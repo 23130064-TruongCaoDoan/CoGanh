@@ -71,4 +71,3 @@ public class HomePanel extends JPanel {
         void onAISelected(String level);
     }
 }
-

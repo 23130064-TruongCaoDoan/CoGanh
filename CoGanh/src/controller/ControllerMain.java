@@ -17,6 +17,7 @@ public class ControllerMain {
     private HomePanel homePanel;
     private int x, y;
     private boolean aiMode;
+
     public ControllerMain() {
         this.x = -1;
         this.y = -1;
@@ -28,7 +29,6 @@ public class ControllerMain {
         infoPanel = new InForPlayerPanel();
         menuPanel = new MenuPanel();
 
-     
         homePanel = new HomePanel(new HomePanel.HomeListener() {
             @Override
             public void onPvP() {
@@ -37,10 +37,13 @@ public class ControllerMain {
 
             @Override
             public void onAISelected(String level) {
-            	if (level.equals("Dễ")) ai.setDepth(0);
-            	else if (level.equals("Thường")) ai.setDepth(2);
-            	else if (level.equals("Khó")) ai.setDepth(4);
-            	aiMode = true;
+                if (level.equals("Dễ"))
+                    ai.setDepth(0);
+                else if (level.equals("Thường"))
+                    ai.setDepth(2);
+                else if (level.equals("Khó"))
+                    ai.setDepth(4);
+                aiMode = true;
                 frame.showGame();
             }
         });
@@ -50,12 +53,21 @@ public class ControllerMain {
         updateBoard();
         updateTurn();
         updateScore();
-
+        backHome();
         setupMenuActions();
     }
 
     private void setupMenuActions() {
         menuPanel.getNewGame().addActionListener(e -> resetGame());
+    }
+    private void backHome() {
+        menuPanel.getHome().addActionListener(e -> home());
+    }
+
+    private void home() {
+        frame.showHome();
+        resetGame();
+        aiMode=false;
     }
 
     public void click(int rr, int cc) {
@@ -67,7 +79,8 @@ public class ControllerMain {
             }
         } else {
             if (x == rr && y == cc) {
-                x = -1; y = -1;
+                x = -1;
+                y = -1;
                 return;
             }
 
@@ -76,42 +89,45 @@ public class ControllerMain {
             updateBoard();
             updateTurn();
             checkWin();
-            if(aiMode) {
-            	javax.swing.SwingUtilities.invokeLater(() -> {
-    	            try {
-    	                Thread.sleep(300);
-    	                aiRun();
-    	            } catch (InterruptedException ex) {
-    	                ex.printStackTrace();
-    	            }
-    	        });
+            if (aiMode) {
+                javax.swing.SwingUtilities.invokeLater(() -> {
+                    try {
+                        Thread.sleep(300);
+                        aiRun();
+                    } catch (InterruptedException ex) {
+                        ex.printStackTrace();
+                    }
+                });
             }
-            x = -1; y = -1;
+            x = -1;
+            y = -1;
         }
     }
 
     public boolean isAiMode() {
-		return aiMode;
-	}
+        return aiMode;
+    }
 
-	public void setAiMode(boolean aiMode) {
-		this.aiMode = aiMode;
-	}
+    public void setAiMode(boolean aiMode) {
+        this.aiMode = aiMode;
+    }
 
-	private void resetGame() {
+    private void resetGame() {
         model.reset();
         infoPanel.reset();
         updateBoard();
         updateScore();
         updateTurn();
     }
+
     private void aiRun() throws InterruptedException {
-		ai.aiTurn();
-		updateScore();
-		updateTurn();
-		updateBoard();
-		checkWin();
-	}
+        ai.aiTurn();
+        updateScore();
+        updateTurn();
+        updateBoard();
+        checkWin();
+    }
+
     private void updateBoard() {
         Piece[][] b = model.getBoard().getBoard();
         for (int i = 0; i < 5; i++)
