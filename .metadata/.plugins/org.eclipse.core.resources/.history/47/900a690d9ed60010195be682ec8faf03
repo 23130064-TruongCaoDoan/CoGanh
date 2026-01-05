@@ -7,7 +7,7 @@ public class AI {
 	private GameLogic logic;
 	private int depth;
 
-	public AI(GameLogic logic) {
+	public AI(GameLogic logic, int depth) {
 		super();
 		this.logic = logic;
 		this.depth = depth;
@@ -17,10 +17,6 @@ public class AI {
 		return 10 * (board.countPiece(false) - board.countPiece(true))
 				+ 5 * (board.countPieceCenter(false) - board.countPieceCenter(true));
 	}
-	
-	
-	//minimax
-	
 
 	public int minimax(boolean maxmin, Board board, int depth) {
 		if (depth == 0)
@@ -48,42 +44,6 @@ public class AI {
 			return temp;
 		}
 	}
-	
-	public int alphaBeta(boolean maxmin, Board board, int depth, int alpha, int beta) {
-	    if (depth == 0)
-	        return heuristic(board);
-
-	    if (maxmin) {
-	        int maxEval = -999999999;
-
-	        for (Board child : getChildren(board, "black")) {
-	            int eval = alphaBeta(false, child, depth - 1, alpha, beta);
-	            maxEval = Math.max(maxEval, eval);
-	            alpha = Math.max(alpha, eval);
-	            if (beta <= alpha) {
-	                break;
-	            }
-	        }
-	        return maxEval;
-	    } else {
-	        int minEval = Integer.MAX_VALUE; 
-
-	        for (Board child : getChildren(board, "white")) {
-	            int eval = alphaBeta(true, child, depth - 1, alpha, beta);
-	            minEval = Math.min(minEval, eval);
-	            beta = Math.min(beta, eval);
-	            if (beta <= alpha) {
-	                break;
-	            }
-	        }
-	        return minEval;
-	    }
-	}
-
-	
-	
-	
-	// cắt tỉa alpha belta 
 
 	private List<Board> getChildren(Board board, String currentColor) {
 		List<Board> children = new ArrayList<>();
@@ -141,6 +101,7 @@ public class AI {
 
 	public void aiTurn() throws InterruptedException {
 		if (!logic.getTurn()) {
+			Thread.sleep(800);
 			Board currentBoard = logic.getBoard();
 			Board bestBoard = getBestMove(currentBoard,depth);
 			int eatenWhite = currentBoard.countPiece(true) - bestBoard.countPiece(true);
